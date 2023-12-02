@@ -1,3 +1,9 @@
+# Object detection with bounding box using YOLOv4 model in ONNX format
+#
+# run: python python-instead.py
+# need: yolov4_anchors.txt yolov4-class-list.txt yolov4.onnx
+# ref: https://github.com/onnx/models/tree/main/vision/object_detection_segmentation/yolov4
+
 import numpy as np
 import cv2
 from onnx import numpy_helper
@@ -8,15 +14,7 @@ import colorsys
 import random
 import time
 
-# # Define the function for image preprocessing
-# def image_preprocess(image, target_size):
-#     image_resized = cv2.resize(image, tuple(target_size))
-#     image_normalized = image_resized / 255.0
-#     image_batched = np.expand_dims(image_normalized.astype(np.float32), axis=0)
-#     return image_batched
 
-
-# Define the function for image preprocessing
 def image_preprocess(image, target_size, gt_boxes=None):
     ih, iw = target_size
     h, w, _ = image.shape
@@ -219,10 +217,10 @@ def main():
     input_size = 416
     
     # Load the YOLOv4 ONNX model
-    model_path = "./yolov4.onnx"  # Replace with the path to your ONNX model
+    model_path = "./yolov4.onnx"
     session = rt.InferenceSession(model_path)
 
-    display_width = 640 # 1280
+    display_width = 640 # 1280 for bigger viewing size
     display_height = 480 # 960
 
     # Initialize variables for frame rate calculation
@@ -231,7 +229,7 @@ def main():
     fps = 0
 
     # Open the webcam
-    cap = cv2.VideoCapture(0)  # 0 corresponds to the default camera, you can change it if needed
+    cap = cv2.VideoCapture(0)  # 0 = default camera
 
     while True:
         ret, frame = cap.read()
